@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SP — Digital Physics Laboratory · Under Development</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0B1120; --panel:#111C2E; --border:#263449; --accent:#22D3EE;
+  --text:#F1F5F9; --muted:#94A3B8; --warn:#FBBF24; --vy:#F472B6;
+  --radius:10px; --gap:16px;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.5}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header.top{border-bottom:1px solid var(--border);background:var(--panel)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.04em}
+.logo{width:28px;height:28px;border-radius:7px;border:2px solid var(--accent);display:grid;place-items:center;color:var(--accent);font-size:13px}
+.chip{font-size:12px;border:1px solid var(--warn);color:var(--warn);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.chip::before{content:"● ";}
+.hero{text-align:center;padding:56px 0 36px}
+.eyebrow{color:var(--accent);font-size:13px;letter-spacing:.18em;text-transform:uppercase;margin:0 0 14px}
+h1{font-size:clamp(2.6rem,9vw,6rem);line-height:1.02;margin:0;letter-spacing:-.02em;font-weight:800}
+h1 span{color:var(--accent)}
+.lead{max-width:640px;margin:20px auto 0;color:var(--muted);font-size:1.1rem}
+.badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:22px}
+.badge{font-size:12px;color:var(--muted);border:1px solid var(--border);background:var(--panel);padding:4px 10px;border-radius:6px}
+.section-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px;margin:34px 0 12px}
+.section-title h2{margin:0;font-size:1.15rem}
+.section-title p{margin:0;color:var(--muted);font-size:.9rem}
+.frame{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg);box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.frame-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted)}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:var(--border);display:block}
+.app{display:grid;grid-template-columns:180px 1fr;min-height:560px}
+nav.side{background:var(--panel);border-right:1px solid var(--border);padding:14px}
+nav.side h3{margin:0 0 8px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+nav.side div{padding:8px 10px;border-radius:8px;font-size:14px;color:var(--muted);border:1px solid transparent}
+nav.side div.on{color:var(--text);background:rgba(34,211,238,.1);border-color:var(--accent)}
+nav.side div.soon{opacity:.55}
+main.lab{padding:var(--gap);display:grid;gap:var(--gap);min-width:0}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+.panel h3{margin:0 0 8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sim-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;font-size:13px;color:var(--muted)}
+svg{display:block;width:100%;height:auto}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.btn{font:inherit;font-size:13px;color:var(--text);background:transparent;border:1px solid var(--border);border-radius:7px;padding:6px 12px;cursor:default}
+.btn.primary{background:var(--accent);color:#04202a;border-color:var(--accent);font-weight:600}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+.param{margin-bottom:10px;font-size:13px}
+.param .row{display:flex;justify-content:space-between;color:var(--muted)}
+.param b{color:var(--text);font-family:var(--mono);font-weight:500}
+.track{height:4px;background:var(--border);border-radius:2px;margin-top:8px;position:relative}
+.track i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:2px}
+.track i::after{content:"";position:absolute;right:-6px;top:-4px;width:12px;height:12px;border-radius:50%;background:var(--text);border:2px solid var(--accent)}
+dl.meas{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:13px}
+dl.meas dt{color:var(--muted)}dl.meas dd{margin:0;text-align:right;font-family:var(--mono)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:10px;overflow-x:auto}
+.tabs div{padding:6px 12px;font-size:13px;color:var(--muted);white-space:nowrap}
+.tabs div.on{color:var(--accent);border-bottom:2px solid var(--accent)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:4px;flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:18px;height:0;border-top:2px solid var(--accent);vertical-align:middle;margin-right:6px}
+.legend span.dash::before{border-top:2px dashed var(--vy)}
+.note{margin:12px 0 0;font-size:.85rem;color:var(--muted);text-align:center}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--gap);margin-top:12px}
+.features .panel p{margin:0;color:var(--muted);font-size:.92rem}
+.features .panel h3{color:var(--text);text-transform:none;letter-spacing:0;font-size:1rem}
+footer{border-top:1px solid var(--border);margin-top:48px;padding:24px 0;color:var(--muted);font-size:.85rem;text-align:center}
+@media (max-width:767px){
+  .app{grid-template-columns:1fr}
+  nav.side{display:none}
+  .cols{grid-template-columns:1fr}
+  .hero{padding-top:36px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="logo" aria-hidden="true">SP</span> PHYSICA</div>
+    <span class="chip">Preview build</span>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <p class="eyebrow">SP — Digital Physics Laboratory</p>
+  <h1>Under <span>Development</span></h1>
+  <p class="lead">An interactive, browser-based physics laboratory. Explore projectile motion, inspect vectors, read live graphs and compare theory with results. We are still building it.</p>
+  <div class="badges" aria-label="Project details">
+    <span class="badge">Projectile Motion Laboratory</span>
+    <span class="badge">Canvas 2D</span>
+    <span class="badge">TypeScript + Vite</span>
+    <span class="badge">Accessible by design</span>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="section-title">
+    <h2>A first look at the interface</h2>
+    <p>Concept preview. Controls are not interactive yet.</p>
+  </div>
+
+  <div class="frame" role="img" aria-label="Mockup of the Projectile Motion Laboratory showing a simulation viewport, parameters, live measurements and analysis tabs">
+    <div class="frame-bar"><span class="dots"><i></i><i></i><i></i></span><span>Projectile Motion Laboratory</span></div>
+    <div class="app">
+      <nav class="side" aria-hidden="true">
+        <h3>Experiments</h3>
+        <div class="on">Projectile Motion</div>
+        <div class="soon">More coming later</div>
+      </nav>
+      <main class="lab" aria-hidden="true">
+        <section class="panel">
+          <div class="sim-head"><span>Simulation</span><span id="tlabel">t = 0.00 s</span></div>
+          <svg id="sim" viewBox="0 0 640 300" aria-hidden="true"></svg>
+          <div class="controls">
+            <span class="btn primary">Play</span><span class="btn">Pause</span><span class="btn">Step</span><span class="btn">Reset</span><span class="btn">Speed 1×</span>
+          </div>
+        </section>
+        <div class="cols">
+          <section class="panel">
+            <h3>Parameters</h3>
+            <div class="param"><div class="row"><span>Initial speed</span><b>20 m/s</b></div><div class="track"><i style="width:20%"></i></div></div>
+            <div class="param"><div class="row"><span>Launch angle</span><b>45°</b></div><div class="track"><i style="width:50%"></i></div></div>
+            <div class="param"><div class="row"><span>Launch height</span><b>0 m</b></div><div class="track"><i style="width:0%"></i></div></div>
+            <div class="param"><div class="row"><span>Gravity</span><b>9.81 m/s²</b></div><div class="track"><i style="width:37%"></i></div></div>
+          </section>
+          <section class="panel">
+            <h3>Live measurements</h3>
+            <dl class="meas">
+              <dt>x</dt><dd id="mx">0.00 m</dd>
+              <dt>y</dt><dd id="my">0.00 m</dd>
+              <dt>vₓ</dt><dd id="mvx">0.00 m/s</dd>
+              <dt>v_y</dt><dd id="mvy">0.00 m/s</dd>
+              <dt>Speed</dt><dd id="mv">0.00 m/s</dd>
+              <dt>aₓ, a_y</dt><dd>0.00, −9.81 m/s²</dd>
+            </dl>
+          </section>
+        </div>
+        <section class="panel">
+          <div class="tabs"><div class="on">Graphs</div><div>Data</div><div>Equations</div><div>Results</div></div>
+          <svg id="graph" viewBox="0 0 640 170" aria-hidden="true"></svg>
+          <div class="legend"><span>vₓ (constant)</span><span class="dash">v_y (linear)</span></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <p class="note">The preview animates the ideal-projectile equations: x = v₀cosθ·t and y = y₀ + v₀sinθ·t − ½gt², with defaults of 20 m/s at 45°.</p>
+
+  <div class="section-title"><h2>What is planned</h2><p>Nothing here is released yet.</p></div>
+  <div class="features">
+    <div class="panel"><h3>Interactive simulation</h3><p>Launch, pause, step and replay with selectable vector overlays.</p></div>
+    <div class="panel"><h3>Graphs and data</h3><p>Trajectory, position, velocity and acceleration, with a data table alternative.</p></div>
+    <div class="panel"><h3>Equations and results</h3><p>Typeset equations tied to your parameters, plus theoretical flight time, height and range.</p></div>
+    <div class="panel"><h3>Accessible and responsive</h3><p>Keyboard friendly, reduced-motion aware, and built for desktop, tablet and mobile.</p></div>
+  </div>
+</div>
+
+<footer><div class="wrap">SP — Digital Physics Laboratory · Under development · Not yet available</div></footer>
+
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  var v0=20,th=45*Math.PI/180,g=9.81,y0=0;
+  var vx=v0*Math.cos(th),vy0=v0*Math.sin(th);
+  var T=(vy0+Math.sqrt(vy0*vy0+2*g*y0))/g, R=vx*T;
+  function X(t){return vx*t}
+  function Y(t){return y0+vy0*t-0.5*g*t*t}
+  function el(p,n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e}
+
+  // Simulation view: equal scale on both axes
+  var sim=document.getElementById("sim");
+  var ox=50,gy=262,s=(640-80)/(R*1.06);
+  var px=function(x){return ox+x*s}, py=function(y){return gy-y*s};
+  for(var m=0;m<=45;m+=5){
+    el(sim,"line",{x1:px(m),y1:20,x2:px(m),y2:gy,stroke:"#263449","stroke-width":.7});
+    el(sim,"text",{x:px(m),y:gy+16,fill:"#94A3B8","font-size":10,"text-anchor":"middle"}).textContent=m;
+  }
+  for(var h=0;h<=20;h+=5){
+    el(sim,"line",{x1:ox,y1:py(h),x2:630,y2:py(h),stroke:"#263449","stroke-width":.7});
+    el(sim,"text",{x:ox-6,y:py(h)+3,fill:"#94A3B8","font-size":10,"text-anchor":"end"}).textContent=h;
+  }
+  el(sim,"text",{x:630,y:gy+28,fill:"#94A3B8","font-size":10,"text-anchor":"end"}).textContent="x (m)";
+  el(sim,"text",{x:8,y:14,fill:"#94A3B8","font-size":10}).textContent="y (m)";
+  el(sim,"line",{x1:ox,y1:gy,x2:630,y2:gy,stroke:"#94A3B8","stroke-width":1.5});
+  var d="";
+  for(var i=0;i<=120;i++){var t=T*i/120;d+=(i?"L":"M")+px(X(t)).toFixed(1)+" "+py(Y(t)).toFixed(1)}
+  el(sim,"path",{d:d,fill:"none",stroke:"#22D3EE","stroke-width":2,"stroke-dasharray":"5 4",opacity:.7});
+  el(sim,"circle",{cx:ox,cy:gy,r:4,fill:"#F1F5F9"});
+  el(sim,"path",{d:"M"+(ox+34)+" "+gy+" A34 34 0 0 0 "+(ox+34*Math.cos(th)).toFixed(1)+" "+(gy-34*Math.sin(th)).toFixed(1),fill:"none",stroke:"#FBBF24","stroke-width":1.2});
+  el(sim,"text",{x:ox+40,y:gy-8,fill:"#FBBF24","font-size":10}).textContent="45°";
+  var ball=el(sim,"circle",{cx:ox,cy:gy,r:7,fill:"#22D3EE",stroke:"#F1F5F9","stroke-width":1.5});
+  var vecH=el(sim,"line",{stroke:"#22D3EE","stroke-width":2,"marker-end":"url(#ah)"});
+  var vecV=el(sim,"line",{stroke:"#F472B6","stroke-width":2,"stroke-dasharray":"4 3"});
+  var vsc=3;
+
+  // Velocity graph
+  var gr=document.getElementById("graph");
+  var gx0=50,gx1=620,gt=12,gb=148;
+  var vmax=22,gpx=function(t){return gx0+(gx1-gx0)*t/T}, gpy=function(v){return gb-(gb-gt)*(v+vmax)/(2*vmax)};
+  [-20,-10,0,10,20].forEach(function(v){
+    el(gr,"line",{x1:gx0,y1:gpy(v),x2:gx1,y2:gpy(v),stroke:v===0?"#94A3B8":"#263449","stroke-width":v===0?1:.7});
+    el(gr,"text",{x:gx0-6,y:gpy(v)+3,fill:"#94A3B8","font-size":10,"text-anchor":"end"}).textContent=v;
+  });
+  el(gr,"text",{x:gx1,y:166,fill:"#94A3B8","font-size":10,"text-anchor":"end"}).textContent="t (s)  ·  velocity (m/s)";
+  el(gr,"line",{x1:gx0,y1:gpy(vx),x2:gx1,y2:gpy(vx),stroke:"#22D3EE","stroke-width":2});
+  el(gr,"line",{x1:gx0,y1:gpy(vy0),x2:gx1,y2:gpy(vy0-g*T),stroke:"#F472B6","stroke-width":2,"stroke-dasharray":"6 4"});
+  var cur=el(gr,"line",{y1:gt,y2:gb,stroke:"#FBBF24","stroke-width":1.2});
+
+  var defs=el(sim,"defs",{});
+  var mk=el(defs,"marker",{id:"ah",markerWidth:8,markerHeight:8,refX:6,refY:4,orient:"auto"});
+  el(mk,"path",{d:"M0 0 L8 4 L0 8 z",fill:"#22D3EE"});
+
+  var ids={t:"tlabel",x:"mx",y:"my",vx:"mvx",vy:"mvy",v:"mv"};
+  var E={};for(var k in ids)E[k]=document.getElementById(ids[k]);
+  function f(n){return (Math.abs(n)<5e-3?0:n).toFixed(2)}
+  function draw(t){
+    var x=X(t),y=Y(t),vy=vy0-g*t;
+    var cx=px(x),cy=py(y);
+    ball.setAttribute("cx",cx);ball.setAttribute("cy",cy);
+    vecH.setAttribute("x1",cx);vecH.setAttribute("y1",cy);vecH.setAttribute("x2",cx+vx*vsc);vecH.setAttribute("y2",cy);
+    vecV.setAttribute("x1",cx);vecV.setAttribute("y1",cy);vecV.setAttribute("x2",cx);vecV.setAttribute("y2",cy-vy*vsc);
+    cur.setAttribute("x1",gpx(t));cur.setAttribute("x2",gpx(t));
+    E.t.textContent="t = "+t.toFixed(2)+" s";
+    E.x.textContent=f(x)+" m";E.y.textContent=f(y)+" m";
+    E.vx.textContent=f(vx)+" m/s";E.vy.textContent=f(vy)+" m/s";
+    E.v.textContent=f(Math.sqrt(vx*vx+vy*vy))+" m/s";
+  }
+  var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce){draw(vy0/g);return}
+  var start=null;
+  function loop(ts){
+    if(start===null)start=ts;
+    var t=((ts-start)/1000)%(T+1.2);
+    draw(Math.min(t,T));
+    requestAnimationFrame(loop);
+  }
+  draw(0);requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
